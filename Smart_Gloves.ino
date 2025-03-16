@@ -52,13 +52,6 @@ void loop() {
         int alpswitch = digitalRead(alp_pin);
         int worswitch = digitalRead(wor_pin);
         
-        Serial.print("Num_switch ");
-        Serial.println(numswitch);
-        Serial.print("Alp_switch ");
-        Serial.println(alpswitch);
-        Serial.print("Wor_switch ");
-        Serial.println(worswitch);
-        
         if(numswitch == 0 && nprev == 1){
             if(nflag == true)
             nflag = false;
@@ -87,256 +80,67 @@ void loop() {
           }
         }
 
+        int data1 = analogRead(pinkyXaxis_pin);
+        int data2 = analogRead(ringXaxis_pin);
+        int data3 = analogRead(middleXaxis_pin);
+        int data4 = analogRead(indexXaxis_pin);
+        int data5 = analogRead(thumbXaxis_pin);
+
+        int state1 = detState(data1);
+        int state2 = detState(data2);
+        int state3 = detState(data3);
+        int state4 = detState(data4);
+        int state5 = detState(data5);
+
+        int stateArray[6] = {state1, state2, state3, state4, state5};
+
+        String finalState = convertState(stateArray, 5);
+
         if(nflag){
-            int data1 = analogRead(pinkyXaxis_pin);
-            int data2 = analogRead(ringXaxis_pin);
-            int data3 = analogRead(middleXaxis_pin);
-            int data4 = analogRead(indexXaxis_pin);
-            int data5 = analogRead(thumbXaxis_pin);
+            finalState = '1' + finalState;
             Serial.println("Number_Mode");
-            Serial.print("pinkyXaxis_pin: ");
-            Serial.println(data1);
-            Serial.print("ringXaxis_pin: ");
-            Serial.println(data2);
-            Serial.print("middleXaxis_pin: ");
-            Serial.println(data3);
-            Serial.print("indexXaxis_pin: ");
-            Serial.println(data4);
-            Serial.print("thumbXaxis_pin: ");
-            Serial.println(data5);
-            Serial.println(" : ");
-
-            int state1 = det_state(data1);
-            int state2 = det_state(data2);
-            int state3 = det_state(data3);
-            int state4 = det_state(data4);
-            int state5 = det_state(data5);
-
-            if((state1 == 0) && (state2 == 0) && (state3 == 0) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("0");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 0) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("1");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 1) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("2");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 1) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("3");
-            }
-            else if((state1 == 1) && (state2 == 1) && (state3 == 1) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("4");
-            }
-            else if((state1 == 1) && (state2 == 1) && (state3 == 1) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("5");
-            }
-            else if((state1 == 0) && (state2 == 1) && (state3 == 1) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("6");
-            }
-            else if((state1 == 1) && (state2 == 0) && (state3 == 1) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("7");
-            }
-            else if((state1 == 1) && (state2 == 1) && (state3 == 0) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("8");
-            }
-            else if((state1 == 1) && (state2 == 1) && (state3 == 1) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("9");
-            }
-            else{
-                bluetooth.print("Invalid position");
-            }
+            Serial.println(finalState);
+            bluetooth.print(finalState);
         }
-
+        
         else if(aflag){
-            int data1 = analogRead(pinkyXaxis_pin);
-            int data2 = analogRead(ringXaxis_pin);
-            int data3 = analogRead(middleXaxis_pin);
-            int data4 = analogRead(indexXaxis_pin);
-            int data5 = analogRead(thumbXaxis_pin);
-            
+            finalState = '2' + finalState;
             Serial.println("Alphabet_Mode");
-            Serial.print("pinkyXaxis_pin: ");
-            Serial.println(data1);
-            Serial.print("ringXaxis_pin: ");
-            Serial.println(data2);
-            Serial.print("middleXaxis_pin: ");
-            Serial.println(data3);
-            Serial.print("indexXaxis_pin: ");
-            Serial.println(data4);
-            Serial.print("thumbXaxis_pin: ");
-            Serial.println(data5);
-            Serial.println(" : ");
-
-            int state1 = det_state(data1);
-            int state2 = det_state(data2);
-            int state3 = det_state(data3);
-            int state4 = det_state(data4);
-            int state5 = det_state(data5);
-
-            if((state1 == 0) && (state2 == 0) && (state3 == 0) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("A");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 0) && (state4 == 0) && (state5 == 1)){
-                bluetooth.print("B");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 0) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("C");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 0) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("D");
-            }
-            
-            else if((state1 == 0) && (state2 == 0) && (state3 == 1) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("E");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 1) && (state4 == 0) && (state5 == 1)){
-                bluetooth.print("F");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 1) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("G");
-            }
-            else if((state1 == 0) && (state2 == 0) && (state3 == 1) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("H");
-            }
-            
-            else if((state1 == 0) && (state2 == 1) && (state3 == 0) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("I");
-            }
-            else if((state1 == 0) && (state2 == 1) && (state3 == 0) && (state4 == 0) && (state5 == 1)){
-                bluetooth.print("J");
-            }
-            else if((state1 == 0) && (state2 == 1) && (state3 == 0) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("K");
-            }
-            else if((state1 == 0) && (state2 == 1) && (state3 == 0) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("L");
-            }
-
-            else if((state1 == 0) && (state2 == 1) && (state3 == 1) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("M");
-            }
-            else if((state1 == 0) && (state2 == 1) && (state3 == 1) && (state4 == 0) && (state5 == 1)){
-                bluetooth.print("N");
-            }
-            else if((state1 == 0) && (state2 == 1) && (state3 == 1) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("O");
-            }
-            else if((state1 == 0) && (state2 == 1) && (state3 == 1) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("P");
-            }
-
-            else if((state1 == 1) && (state2 == 0) && (state3 == 0) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("Q");
-            }
-            else if((state1 == 1) && (state2 == 0) && (state3 == 0) && (state4 == 0) && (state5 == 1)){
-                bluetooth.print("R");
-            }
-            else if((state1 == 1) && (state2 == 0) && (state3 == 0) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("S");
-            }
-            else if((state1 == 1) && (state2 == 0) && (state3 == 0) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("T");
-            }
-
-            else if((state1 == 1) && (state2 == 0) && (state3 == 1) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("U");
-            }
-            else if((state1 == 1) && (state2 == 0) && (state3 == 1) && (state4 == 0) && (state5 == 1)){
-                bluetooth.print("V");
-            }
-            else if((state1 == 1) && (state2 == 0) && (state3 == 1) && (state4 == 1) && (state5 == 0)){
-                bluetooth.print("W");
-            }
-            else if((state1 == 1) && (state2 == 0) && (state3 == 1) && (state4 == 1) && (state5 == 1)){
-                bluetooth.print("X");
-            }
-
-            else if((state1 == 1) && (state2 == 1) && (state3 == 1) && (state4 == 0) && (state5 == 0)){
-                bluetooth.print("Y");
-            }
-            else if((state1 == 1) && (state2 == 1) && (state3 == 1) && (state4 == 0) && (state5 == 1)){
-                bluetooth.print("Z");
-            }
-            
-            else{
-                bluetooth.print("Invalid position");
-            }
+            Serial.println(finalState);
+            bluetooth.print(finalState);
         }
         else if(wflag){
-            int data1 = analogRead(pinkyXaxis_pin);
-            int data2 = analogRead(ringXaxis_pin);
-            int data3 = analogRead(middleXaxis_pin);
-            int data4 = analogRead(indexXaxis_pin);
-            int data5 = analogRead(thumbXaxis_pin);
-            
+            finalState = '3' + finalState;
             Serial.println("Word_Mode");
-            Serial.print("pinkyXaxis_pin: ");
-            Serial.println(data1);
-            Serial.print("ringXaxis_pin: ");
-            Serial.println(data2);
-            Serial.print("middleXaxis_pin: ");
-            Serial.println(data3);
-            Serial.print("indexXaxis_pin: ");
-            Serial.println(data4);
-            Serial.print("thumbXaxis_pin: ");
-            Serial.println(data5);
-            Serial.println(" : ");
-
-            int state1 = det_state(data1);
-            int state2 = det_state(data2);
-            int state3 = det_state(data3);
-            int state4 = det_state(data4);
-            int state5 = det_state(data5);
-
-            if(state1 == 0 && state2 == 0 && state3 == 0 && state4 == 0 && state5 == 0){
-                bluetooth.print("bye");
-            }
-            else if(state1 == 0 && state2 == 0 && state3 == 0 && state4 == 0 && state5 == 1){
-                bluetooth.print("I'm thirsty");
-            }
-            else if(state1 == 0 && state2 == 0 && state3 == 0 && state4 == 1 && state5 == 0){
-                bluetooth.print("show me the way");
-            }
-            else if(state1 == 0 && state2 == 0 && state3 == 0 && state4 == 1 && state5 == 1){
-                bluetooth.print("hello");
-            }
-            else if(state1 == 0 && state2 == 0 && state3 == 1 && state4 == 1 && state5 == 0){
-                bluetooth.print("Good Morning");
-            }
-            else if(state1 == 0 && state2 == 1 && state3 == 1 && state4 == 1 && state5 == 0){
-                bluetooth.print("May I use the washroom");
-            }
-            else if(state1 == 1 && state2 == 0 && state3 == 0 && state4 == 1 && state5 == 0){
-                bluetooth.print("Good Evening");
-            }
-            else if(state1 == 1 && state2 == 1 && state3 == 1 && state4 == 0 && state5 == 0){
-                bluetooth.print("I'm Hungry");
-            }
-            else if(state1 == 1 && state2 == 1 && state3 == 1 && state4 == 1 && state5 == 0){
-                bluetooth.print("Excuse me");
-            }
-            else if(state1 == 1 && state2 == 1 && state3 == 1 && state4 == 1 && state5 == 1){
-                bluetooth.print("Hi I use gloves to talk");
-            }
-            else{
-                bluetooth.print("Invalid position");
-            }
+            Serial.println(finalState);
+            bluetooth.print(finalState);
+            
         }
         nprev = numswitch;
         aprev = alpswitch;
         wprev = worswitch;
   }
   prev = switch1;
-  delay(2000);
+  delay(3000);
 }
 
-int det_state(int data){
-    int state = -1;
-    if(data < 600)
-    state = 1;
-    else if(data > 800)
-    state = 0;
-    else 
-    state = -1;
+int detState (int data) {
+    int state = 1;
+    if(data > 650) {
+        state = 0;
+    } else {
+        state = 1;
+    }
     return state;
 }
+
+String convertState (int stateArray[], int size) {
+    String result;
+
+    for (int i=0;i<size;i++) {
+      result += (stateArray[i] == 0) ? '0' : '1';
+    }
+    
+    return result;
+}
+
